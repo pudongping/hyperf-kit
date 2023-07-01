@@ -26,7 +26,7 @@ class Coroutine
 {
     protected LoggerInterface $logger;
 
-    protected LoggerFactory $loggerFactory;
+    protected LoggerInterface $loggerFactory;
 
     protected ?FormatterInterface $formatter;
 

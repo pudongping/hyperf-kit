@@ -17,7 +17,7 @@
         "files": [
             "src/DBHelpers.php",
             "src/FrameworkHelpers.php",
-            "src/SupportHelper.php",
+            "src/SupportHelpers.php",
             "src/SystemHelpers.php"
         ]
     },

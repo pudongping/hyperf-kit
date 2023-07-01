@@ -4,14 +4,14 @@
 
 ## 运行环境
 
-- php >= 7.2
+- php >= 8.0
 - composer
-- hyperf ~2.2.0
+- hyperf ~3.0.0
 
 ## 安装
 
 ```shell
-composer require pudongping/hyperf-kit -vvv
+composer require pudongping/hyperf-kit:^2.0 -vvv
 ```
 
 ## 配置

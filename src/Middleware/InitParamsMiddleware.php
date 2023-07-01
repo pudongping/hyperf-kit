@@ -15,20 +15,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Hyperf\Utils\Context;
+use Hyperf\Context\Context;
 use Hyperf\DbConnection\Db;
+use function Hyperf\Config\config;
 
 class InitParamsMiddleware implements MiddlewareInterface
 {
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(protected ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -69,5 +64,4 @@ class InitParamsMiddleware implements MiddlewareInterface
 
         return $handler->handle($request);
     }
-
 }

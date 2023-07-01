@@ -19,7 +19,7 @@ if (! function_exists('aes_cbc_encrypt')) {
      * @param string $iv 向量
      * @return string
      */
-    function aes_cbc_encrypt($plaintext, string $key, string $iv = ''): string
+    function aes_cbc_encrypt(mixed $plaintext, string $key, string $iv = ''): string
     {
         return CipherHelper::AESCBCEncrypt($plaintext, $key, $iv);
     }

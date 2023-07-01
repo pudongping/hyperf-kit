@@ -16,26 +16,15 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use function Hyperf\Config\config;
 
 class LogInfoMiddleware implements MiddlewareInterface
 {
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * @var RequestInterface
-     */
-    protected $request;
-
     public function __construct(
-        ContainerInterface $container,
-        RequestInterface $request
+        protected ContainerInterface $container,
+        protected RequestInterface   $request
     ) {
-        $this->container = $container;
-        $this->request = $request;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -50,7 +39,7 @@ class LogInfoMiddleware implements MiddlewareInterface
         return $response;
     }
 
-    private function getRequestInfo(ServerRequestInterface $request)
+    private function getRequestInfo(ServerRequestInterface $request): array
     {
         return [
             'method' => $request->getMethod(),  // 当前请求方法 GET/POST/PUT/PATCH ……
@@ -65,14 +54,14 @@ class LogInfoMiddleware implements MiddlewareInterface
         ];
     }
 
-    private function getResponseInfo(ResponseInterface $response)
+    private function getResponseInfo(ResponseInterface $response): array
     {
         // 控制器返回的数据
         $result = $response->getBody()->getContents();
         return json_decode($result, true);
     }
 
-    private function logFormat($data)
+    private function logFormat(mixed $data): bool|string|null
     {
         return config('hyperf_kit.log.format_human') ? var_export($data, true) : json_encode($data, 256);
     }

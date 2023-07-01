@@ -1,5 +1,15 @@
 # Release Notes for 2.x
 
+## 2.0.0 - 2023-07-01
+
+### Fixed
+
+### Changed
+
+- php >= 8.0
+- hyperf ~3.0.0
+
+---
 
 ## 1.0.0 - 2023-07-01
 

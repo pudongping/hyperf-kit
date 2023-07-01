@@ -8,8 +8,9 @@
  */
 declare(strict_types=1);
 
-use Hyperf\Utils\Context;
-use Hyperf\Utils\Str;
+use Hyperf\Context\Context;
+use Hyperf\Stringable\Str;
+use function Hyperf\Config\config;
 
 if (! function_exists('simple_db_debug_sql')) {
     /**
@@ -50,10 +51,10 @@ if (! function_exists('lock_spin')) {
      * @param int $counter 尝试触发多少次直至回调函数处理完成
      * @param int $expireTime 缓存时间（实际上是赌定回调函数处理多少秒内可以处理完成）
      * @param int $loopWaitTime 加锁等待时长
-     * @return null
+     * @return mixed
      * @throws RedisException
      */
-    function lock_spin(callable $callBack, string $key, int $counter = 10, int $expireTime = 5, int $loopWaitTime = 500000)
+    function lock_spin(callable $callBack, string $key, int $counter = 10, int $expireTime = 5, int $loopWaitTime = 500000): mixed
     {
         $result = null;
         while ($counter > 0) {
@@ -89,7 +90,7 @@ if (! function_exists('cache_remember')) {
      * @return mixed
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    function cache_remember(string $key, int $ttl, callable $callBack)
+    function cache_remember(string $key, int $ttl, callable $callBack): mixed
     {
         $value = cache()->get($key);
         if (! is_null($value)) {
@@ -155,10 +156,10 @@ if (! function_exists('set_global_init_params')) {
      * 重新设置全局初始化参数
      *
      * @param string $key
-     * @param $value
-     * @return mixed|null
+     * @param mixed|null $value
+     * @return mixed
      */
-    function set_global_init_params(string $key, $value = null)
+    function set_global_init_params(string $key, mixed $value = null): mixed
     {
         $tempValueKey = config('hyperf_kit.context_key.temp_value');
         if (! Context::has($tempValueKey)) return $value;
@@ -177,10 +178,10 @@ if (! function_exists('get_global_init_params')) {
      * 获取初始化全局参数
      *
      * @param string|null $key
-     * @param $default
-     * @return false|mixed|null
+     * @param mixed|null $default
+     * @return mixed
      */
-    function get_global_init_params(?string $key = '', $default = null)
+    function get_global_init_params(?string $key = '', mixed $default = null): mixed
     {
         $tempValueKey = config('hyperf_kit.context_key.temp_value');
         if (! Context::has($tempValueKey)) return $default;

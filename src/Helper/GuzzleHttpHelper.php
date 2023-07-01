@@ -12,18 +12,16 @@ declare(strict_types=1);
 namespace Pudongping\HyperfKit\Helper;
 
 use Hyperf\Guzzle\ClientFactory;
+use function Hyperf\Config\config;
 
 class GuzzleHttpHelper
 {
 
-    protected $clientFactory;
-
-    public function __construct(ClientFactory $clientFactory)
+    public function __construct(protected ClientFactory $clientFactory)
     {
-        $this->clientFactory = $clientFactory;
     }
 
-    public function get(string $url, array $params = [])
+    public function get(string $url, array $params = []): mixed
     {
         $arr = [
             'headers' => $params['headers'] ?? [],
@@ -39,7 +37,7 @@ class GuzzleHttpHelper
         return $this->response('GET', $url, array_merge($arr, $params));
     }
 
-    public function post(string $url, array $params = [])
+    public function post(string $url, array $params = []): mixed
     {
         $arr = [
             'headers' => $params['headers'] ?? [],
@@ -55,7 +53,7 @@ class GuzzleHttpHelper
         return $this->response('POST', $url, array_merge($arr, $params));
     }
 
-    public function upload(string $url, string $filePath)
+    public function upload(string $url, string $filePath): mixed
     {
         $arr = [
             'multipart' => [
@@ -69,7 +67,7 @@ class GuzzleHttpHelper
         return $this->response('POST', $url, $arr);
     }
 
-    public function put(string $url, array $params = [])
+    public function put(string $url, array $params = []): mixed
     {
         $arr = [
             'headers' => $params['headers'] ?? [],
@@ -85,7 +83,7 @@ class GuzzleHttpHelper
         return $this->response('PUT', $url, array_merge($arr, $params));
     }
 
-    public function delete(string $url, array $params = [])
+    public function delete(string $url, array $params = []): mixed
     {
         $arr = [
             'headers' => $params['headers'] ?? [],
@@ -101,7 +99,7 @@ class GuzzleHttpHelper
         return $this->response('DELETE', $url, array_merge($arr, $params));
     }
 
-    public function response(string $method, string $url, array $args): array
+    public function response(string $method, string $url, array $args): mixed
     {
         $enable = config('hyperf_kit.log.guzzle_enable');
         $enable && logger()->info(sprintf("此时为 %s 请求，请求地址为 ====> %s 参数为 ====> %s", $method, $url, var_export($args, true)));

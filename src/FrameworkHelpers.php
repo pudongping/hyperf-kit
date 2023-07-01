@@ -8,8 +8,9 @@
  */
 declare(strict_types=1);
 
-use Hyperf\Utils\ApplicationContext;
+use Hyperf\Context\ApplicationContext;
 use Hyperf\Redis\RedisFactory;
+use Hyperf\Redis\RedisProxy;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\HttpServer\Contract\RequestInterface;
@@ -22,6 +23,7 @@ use Hyperf\ExceptionHandler\Formatter\FormatterInterface;
 use Hyperf\DB\DB as HyperfSimpleDB;
 use Hyperf\Paginator\LengthAwarePaginator;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 
 if (! function_exists('container')) {
     /**
@@ -32,7 +34,7 @@ if (! function_exists('container')) {
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function container(string $id = '')
+    function container(string $id = ''): mixed
     {
         $container = ApplicationContext::getContainer();
 
@@ -45,11 +47,11 @@ if (! function_exists('container')) {
 if (! function_exists('di')) {
     /**
      * @param string $id
-     * @return mixed|\Psr\Container\ContainerInterface
+     * @return mixed
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function di(string $id = '')
+    function di(string $id = ''): mixed
     {
         return container($id);
     }
@@ -60,11 +62,11 @@ if (! function_exists('redis')) {
      * 获取 Redis 协程客户端
      *
      * @param string $poolName 连接池名称
-     * @return \Hyperf\Redis\RedisProxy
+     * @return RedisProxy
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function redis(string $poolName = 'default')
+    function redis(string $poolName = 'default'): RedisProxy
     {
         return container()->get(RedisFactory::class)->get($poolName);
     }
@@ -74,9 +76,11 @@ if (! function_exists('std_out_log')) {
     /**
      * 控制台日志
      *
-     * @return StdoutLoggerInterface|mixed
+     * @return mixed
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function std_out_log()
+    function std_out_log(): mixed
     {
         return container()->get(StdoutLoggerInterface::class);
     }
@@ -86,13 +90,13 @@ if (! function_exists('logger')) {
     /**
      * 文件日志
      *
-     * @param $name
-     * @param $group
-     * @return \Psr\Log\LoggerInterface
+     * @param string $name
+     * @param string $group
+     * @return LoggerInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function logger($name = 'hyperf', $group = 'default')
+    function logger(string $name = 'hyperf', string $group = 'default'): LoggerInterface
     {
         return container()->get(LoggerFactory::class)->get($name, $group);
     }
@@ -106,7 +110,7 @@ if (! function_exists('request')) {
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function request()
+    function request(): mixed
     {
         return container()->get(RequestInterface::class);
     }
@@ -120,7 +124,7 @@ if (! function_exists('response')) {
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function response()
+    function response(): mixed
     {
         return container()->get(ResponseInterface::class);
     }
@@ -134,7 +138,7 @@ if (! function_exists('cache')) {
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function cache()
+    function cache(): mixed
     {
         return container()->get(CacheInterface::class);
     }
@@ -148,7 +152,7 @@ if (! function_exists('simple_db')) {
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function simple_db()
+    function simple_db(): mixed
     {
         return container()->get(HyperfSimpleDB::class);
     }
@@ -181,7 +185,7 @@ if (! function_exists('event_dispatch')) {
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function event_dispatch(object $event)
+    function event_dispatch(object $event): object
     {
         return container()->get(EventDispatcherInterface::class)->dispatch($event);
     }
@@ -210,7 +214,7 @@ if (! function_exists('get_client_ip')) {
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    function get_client_ip()
+    function get_client_ip(): string
     {
         $request = request();
         return $request->getHeaderLine('X-Forwarded-For')

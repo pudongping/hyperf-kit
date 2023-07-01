@@ -10,40 +10,28 @@ declare(strict_types=1);
 
 namespace Pudongping\HyperfKit\Kernel\Context;
 
+use Hyperf\Context\Context;
 use Hyperf\Contract\StdoutLoggerInterface;
-use Hyperf\ExceptionHandler\Formatter\FormatterInterface;
+use Hyperf\Engine\Coroutine as Co;
 use Hyperf\Utils;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Swoole\Coroutine as SwooleCoroutine;
+use Psr\Log\LoggerInterface;
+use Throwable;
 use Pudongping\HyperfKit\Kernel\Log\AppendRequestIdProcessor;
 use Hyperf\Logger\LoggerFactory;
+use Hyperf\ExceptionHandler\Formatter\FormatterInterface;
 
 class Coroutine
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+    protected LoggerInterface $logger;
 
-    /**
-     * @var StdoutLoggerInterface
-     */
-    protected $logger;
+    protected LoggerFactory $loggerFactory;
 
-    /**
-     * @var LoggerFactory
-     */
-    protected $loggerFactory;
+    protected ?FormatterInterface $formatter;
 
-    /**
-     * @var null|FormatterInterface
-     */
-    protected $formatter;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(protected ContainerInterface $container)
     {
-        $this->container = $container;
         $this->logger = $container->get(StdoutLoggerInterface::class);
         $this->loggerFactory = $container->get(LoggerFactory::class)->get('coroutine');
         if ($container->has(FormatterInterface::class)) {
@@ -58,15 +46,15 @@ class Coroutine
     public function create(callable $callable): int
     {
         $id = Utils\Coroutine::id();
-        $result = SwooleCoroutine::create(function () use ($callable, $id) {
+        $coroutine = Co::create(function () use ($callable, $id) {
             try {
                 // 按需复制，禁止复制 Socket，不然会导致 Socket 跨协程调用从而报错
-                Utils\Context::copy($id, [
+                Context::copy($id, [
                     AppendRequestIdProcessor::REQUEST_ID,
                     ServerRequestInterface::class,
                 ]);
-                call($callable);
-            } catch (\Throwable $throwable) {
+                $callable();
+            } catch (Throwable $throwable) {
                 if ($this->formatter) {
                     $this->logger->warning($this->formatter->format($throwable));
                     $this->loggerFactory->error($this->formatter->format($throwable));
@@ -75,6 +63,13 @@ class Coroutine
                 }
             }
         });
-        return is_int($result) ? $result : -1;
+
+        try {
+            return $coroutine->getId();
+        } catch (Throwable $throwable) {
+            $this->logger->warning((string)$throwable);
+            $this->loggerFactory->warning((string)$throwable);
+            return -1;
+        }
     }
 }

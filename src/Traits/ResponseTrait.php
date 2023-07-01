@@ -16,8 +16,9 @@ use Hyperf\DbConnection\Db;
 use Hyperf\Paginator\LengthAwarePaginator;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Model;
-use Hyperf\Utils\Collection as BaseCollection;
-use Hyperf\Utils\Context;
+use Hyperf\Collection\Collection as BaseCollection;
+use Hyperf\Context\Context;
+use function Hyperf\Config\config;
 
 trait ResponseTrait
 {
@@ -27,8 +28,10 @@ trait ResponseTrait
      *
      * @param mixed $data 返回数据
      * @return PsrResponseInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    final public function send($data): PsrResponseInterface
+    final public function send(mixed $data): PsrResponseInterface
     {
         $ret['code'] = ErrorCode::SUCCESS;
         $ret['msg'] = ErrorCode::getMessage(ErrorCode::SUCCESS);
@@ -48,6 +51,8 @@ trait ResponseTrait
      * @param array $data 错误返回数据
      * @param string $message 错误信息
      * @return PsrResponseInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     final public function fail(int $code = ErrorCode::ERROR, array $data = [], string $message = ''): PsrResponseInterface
     {
@@ -67,11 +72,10 @@ trait ResponseTrait
      *
      * @return array
      */
-    final public function showSql()
+    final public function showSql(): array
     {
         $sql = [];
         if (config('hyperf_kit.debug') && get_global_init_params('debug')) {
-
             // sql 日志
             $connections = array_keys(config('databases', []));
             foreach ($connections as $connection) {
@@ -93,7 +97,11 @@ trait ResponseTrait
         return $sql;
     }
 
-    final public function parseData($originalData)
+    /**
+     * @param mixed $originalData
+     * @return mixed
+     */
+    final public function parseData(mixed $originalData): mixed
     {
         if (is_null($originalData) || (is_object($originalData) && empty((array)$originalData))) {
             // 如果返回值直接为 null 或者为空对象时

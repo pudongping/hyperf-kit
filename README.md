@@ -31,5 +31,5 @@ php bin/hyperf.php vendor:publish pudongping/hyperf-kit
 ## 关于分支说明
 
 - `master` 分支作为当前最新版本的不兼容更新（版本只会越来越大，只会向后推进）
-- `1.x`  当前兼容 hyperf 2.2 版本
-- `2.x` 当前兼容 hyperf 3.x 版本
+- `2.2`  当前兼容 hyperf 2.2 版本
+- `3.0` 当前兼容 hyperf 3.0 版本

@@ -22,6 +22,7 @@ use Pudongping\HyperfKit\Exception\ApiException;
 use Hyperf\HttpMessage\Exception\NotFoundHttpException;
 use Hyperf\HttpMessage\Exception\MethodNotAllowedHttpException;
 use Pudongping\HyperfThrottleRequests\Exception\ThrottleRequestsException;
+use function Hyperf\Config\config;
 
 class ApiExceptionHandler extends ExceptionHandler
 {
@@ -69,7 +70,7 @@ class ApiExceptionHandler extends ExceptionHandler
         // 阻止异常冒泡
         $this->stopPropagation();
 
-        logger('ApiException')->error(format_throwable($throwable));  // 记录错误日志
+        config('hyperf_kit.log.exception', true) && logger('ApiException')->error(format_throwable($throwable));  // 记录错误日志
 
         return $this->fail($code, [], $msg);
     }

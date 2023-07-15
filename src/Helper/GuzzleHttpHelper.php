@@ -1,7 +1,9 @@
 <?php
 /**
  * English document link : https://docs.guzzlephp.org/en/stable/
+ *
  * zh-CN document link : https://guzzle-cn.readthedocs.io/zh_CN/latest/request-options.html
+ *
  *
  * Created by PhpStorm
  * User: Alex
@@ -101,7 +103,7 @@ class GuzzleHttpHelper
 
     public function response(string $method, string $url, array $args): mixed
     {
-        $enable = config('hyperf_kit.log.guzzle_enable');
+        $enable = config('hyperf_kit.log.guzzle_enable', true);
         $enable && logger()->info(sprintf("此时为 %s 请求，请求地址为 ====> %s 参数为 ====> %s", $method, $url, var_export($args, true)));
         $client = $this->clientFactory->create();
         $response = $client->request($method, $url, $args);

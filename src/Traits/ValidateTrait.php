@@ -15,6 +15,7 @@ use Hyperf\Di\Annotation\Inject;
 use Pudongping\HyperfKit\Constants\ErrorCode;
 use Pudongping\HyperfKit\Exception\ApiException;
 use function Hyperf\Support\make;
+use function Hyperf\Config\config;
 
 trait ValidateTrait
 {
@@ -44,7 +45,7 @@ trait ValidateTrait
         try {
             $request = make($reqPath);
         } catch (\Throwable $e) {
-            logger('validate')->error(format_throwable($e));
+            config('hyperf_kit.log.exception', true) && logger('validate')->error(format_throwable($e));
             throw new ApiException(ErrorCode::SERVER_ERROR, sprintf('[ %s.php ] 文件不存在！', $reqPath));
         }
 

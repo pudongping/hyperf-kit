@@ -40,6 +40,11 @@ return [
          * 是否开启 guzzle 请求日志
          */
         'guzzle_enable' => env('LOG_GUZZLE_ENABLE', true),
+
+        /**
+         * 系统发生异常时，是否记录日志
+         */
+        'exception' => env('LOG_EXCEPTION', true),
     ],
 
     /**

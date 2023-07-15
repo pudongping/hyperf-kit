@@ -11,7 +11,7 @@
 ## 安装
 
 ```shell
-composer require pudongping/hyperf-kit -vvv
+composer require pudongping/hyperf-kit:^1.0 -vvv
 ```
 
 ## 配置

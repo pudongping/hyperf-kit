@@ -69,7 +69,7 @@ class ApiExceptionHandler extends ExceptionHandler
         // 阻止异常冒泡
         $this->stopPropagation();
 
-        logger()->error(format_throwable($throwable));  // 记录错误日志
+        config('hyperf_kit.log.exception', true) && logger()->error('ApiException: ' . format_throwable($throwable));  // 记录错误日志
 
         return $this->fail($code, [], $msg);
     }

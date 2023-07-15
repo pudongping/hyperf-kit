@@ -50,16 +50,17 @@ if (! function_exists('lock_spin')) {
      * @param int $counter 尝试触发多少次直至回调函数处理完成
      * @param int $expireTime 缓存时间（实际上是赌定回调函数处理多少秒内可以处理完成）
      * @param int $loopWaitTime 加锁等待时长
+     * @param bool $writeLog 是否记录日志
      * @return null
      * @throws RedisException
      */
-    function lock_spin(callable $callBack, string $key, int $counter = 10, int $expireTime = 5, int $loopWaitTime = 500000)
+    function lock_spin(callable $callBack, string $key, int $counter = 10, int $expireTime = 5, int $loopWaitTime = 500000, bool $writeLog = true)
     {
         $result = null;
         while ($counter > 0) {
             $val = microtime() . '_' . uniqid('', true);
             $noticeLog = compact('key', 'val', 'expireTime', 'loopWaitTime', 'counter');
-            logger()->notice(__FUNCTION__ . ' ====> ', $noticeLog);
+            $writeLog && logger()->notice(__FUNCTION__ . ' ====> ', $noticeLog);
             if (redis()->set($key, $val, ['NX', 'EX' => $expireTime])) {
                 if (redis()->get($key) === $val) {
                     try {
@@ -67,7 +68,7 @@ if (! function_exists('lock_spin')) {
                     } finally {
                         $delKeyLua = 'if redis.call("GET", KEYS[1]) == ARGV[1] then return redis.call("DEL", KEYS[1]) else return 0 end';
                         redis()->eval($delKeyLua, [$key, $val], 1);
-                        logger()->notice(__FUNCTION__ . ' delete key ====> ', $noticeLog);
+                        $writeLog && logger()->notice(__FUNCTION__ . ' delete key ====> ', $noticeLog);
                     }
                     return $result;
                 }

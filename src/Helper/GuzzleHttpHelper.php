@@ -85,6 +85,22 @@ class GuzzleHttpHelper
         return $this->response('PUT', $url, array_merge($arr, $params));
     }
 
+    public function json(string $url, array $params = [], string $method = 'POST')
+    {
+        $arr = [
+            'headers' => $params['headers'] ?? ['Content-Type' => 'application/json'],
+            'json' => [],
+            'http_errors' => false,  // 支持错误输出
+        ];
+
+        if (isset($params['body'])) {
+            $arr['json'] = $params['body'];
+            unset($params['body']);
+        }
+
+        return $this->response($method, $url, array_merge($arr, $params));
+    }
+
     public function delete(string $url, array $params = []): mixed
     {
         $arr = [

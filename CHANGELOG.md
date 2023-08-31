@@ -1,6 +1,16 @@
 # Release Notes for 2.x
 
-## 2.0.0 - 2023-07-01
+## 2.2.0 - 2023-08-31
+
+### Added
+
+- `Pudongping\HyperfKit\Middleware\LogInfoMiddleware` 中间件增加程序执行耗时计算
+- `Pudongping\HyperfKit\Helper\GuzzleHttpHelper` 增加 `json` 请求方式
+- 增加了 `pudongping/hyperf-alarm-clock` 和 `pudongping/hyperf-wise-locksmith` 扩展包
+
+---
+
+## 2.1.0 - 2023-07-01
 
 ### Fixed
 
@@ -11,7 +21,7 @@
 
 ---
 
-## 1.0.0 - 2023-07-01
+## 2.0.0 - 2023-07-01
 
 ### Fixed
 

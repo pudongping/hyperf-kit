@@ -1,5 +1,13 @@
 # Release Notes for 2.x
 
+## 2.3.0 - 2023-08-31
+
+### Changed
+
+- 移除 `pudongping/hyperf-throttle-requests` 、`pudongping/hyperf-alarm-clock` 和 `pudongping/hyperf-wise-locksmith` 扩展包
+
+---
+
 ## 2.2.0 - 2023-08-31
 
 ### Added

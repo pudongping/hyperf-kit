@@ -47,14 +47,6 @@ composer require pudongping/hyperf-kit:^2.0 -vvv
 php bin/hyperf.php vendor:publish pudongping/hyperf-kit
 ```
 
-因为此包还配套使用了 `hyperf-throttle-requests` 包和 `hyperf-alarm-clock` 包，因此还需要执行以下命令发布相关配置文件。
-
-```shell
-php bin/hyperf.php vendor:publish pudongping/hyperf-throttle-requests
-
-php bin/hyperf.php vendor:publish pudongping/hyperf-alarm-clock
-```
-
 ## 使用
 
 具体使用可以参考 [hyperf-biz-web-api](https://github.com/pudongping/hyperf-biz-web-api) 项目。

@@ -45,9 +45,6 @@
         "hyperf/redis": "~3.0.0",
         "hyperf/utils": "~3.0.0",
         "hyperf/validation": "^3.0",
-        "pudongping/hyperf-alarm-clock": "^2.0",
-        "pudongping/hyperf-throttle-requests": "^2.0",
-        "pudongping/hyperf-wise-locksmith": "^2.0",
         "pudongping/smart-assist": "^1.0"
     },
     "require-dev": {
